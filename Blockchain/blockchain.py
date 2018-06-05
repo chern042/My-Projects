@@ -60,14 +60,8 @@ class Blockchain:
         :param address: <str> Address of node. Eg. 'http://192.168.0.5:5000'
         :return: None
         '''
-    parsed_url = urlparse(address)
-    if parsed_url.netloc:
+        parsed_url = urlparse(address)
         self.nodes.add(parsed_url.netloc)
-    elif parsed_url.path:
-        # Accepts an URL without scheme like '192.168.0.5:5000'.
-        self.nodes.add(parsed_url.path)
-    else:
-        raise ValueError('Invalid URL')
 
 
 
@@ -153,11 +147,6 @@ class Blockchain:
         :param last_proof: <int>
         :return: <int>
         '''
-
-        ######NEW
-        last_proof = last_block['proof']
-        last_hash = self.hash(last_block)
-        ######NEW
         
         proof = 0
         while self.valid_proof(last_proof, proof) is False:
@@ -196,7 +185,7 @@ blockchain = Blockchain()
 def mine():
     #Run the prrof of work algorithm to get next proof
     last_block = blockchain.last_block
-    #####last_proof = last_block['proof']
+    last_proof = last_block['proof']
     proof = blockchain.proof_of_work(last_proof)
 
     #Must receive a reward for finding the proof
@@ -285,8 +274,10 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
     args = parser.parse_args()
     port = args.port
+    #app.run(host='0.0.0.0', port=5001)
 
     app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=5001)
 
 
 
